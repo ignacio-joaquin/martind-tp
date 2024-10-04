@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>  // Include the time library
 
-#define MAX_WORDS 5000
-#define WORD_LENGTH 5
+#define MAX_WORDS 4976 // todo el 3.txt
+#define WORD_LENGTH 6
 #define MAX_ATTEMPTS 6
 #define CORRECTO 1
 #define INCORRECTO 0
@@ -17,8 +18,10 @@ typedef struct {
     int won;
 } WordleGame;
 
+#define WORD_LENGTH 6 // Assuming this is meant to include the null terminator
+
 int isValidWord(const char *word) {
-    if (strlen(word) > 0 && strlen(word) < WORD_LENGTH) {
+    if (strlen(word) == WORD_LENGTH - 1) { // Check for WORD_LENGTH - 1 for the actual word length
         for (int i = 0; i < strlen(word); i++) {
             if (!isalpha(word[i])) {
                 return 0; // Invalid word
@@ -43,7 +46,7 @@ int readWords(const char *filename, char words[MAX_WORDS][WORD_LENGTH]) {
             word[strcspn(word, "\n")] = '\0'; // Remove newline
             if (isValidWord(word)) {
                 strncpy(words[count], word, WORD_LENGTH - 1);
-                words[count][WORD_LENGTH - 1] = '\0'; // Null-terminate
+                words[count][WORD_LENGTH - 1] = '\0'; // Null-terminate correctly
                 count++;
             }
         }
@@ -51,6 +54,28 @@ int readWords(const char *filename, char words[MAX_WORDS][WORD_LENGTH]) {
 
     fclose(file);
     return count;
+}
+
+
+int binary_search(char arr[MAX_WORDS][WORD_LENGTH], int size, const char *target) {
+    int left = 0;
+    int right = size - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        int cmp = strcmp(arr[mid], target);
+
+        if (cmp == 0) {
+            return mid; // Target found
+        }
+        if (cmp < 0) {
+            left = mid + 1; // Search in the right half
+        } else {
+            right = mid - 1; // Search in the left half
+        }
+    }
+
+    return -1; // Target not found
 }
 
 
@@ -89,10 +114,26 @@ void print_feedback(const WordleGame *game, const char *player_word) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2 || strlen(argv[1]) != WORD_LENGTH) {
+    if (argc != 2 || strlen(argv[1]) != WORD_LENGTH-1) {
         printf("Por favor, proporciona una palabra secreta de 5 letras como argumento.\n");
         return 1;
     }
+    char words[MAX_WORDS][WORD_LENGTH];
+    readWords("3.txt",words);
+
+    clock_t start_time = clock(); // Start timing
+    int result = binary_search(words, MAX_WORDS, argv[1]);
+    clock_t end_time = clock(); // End timing
+
+    double time_taken = (double)(end_time - start_time) / CLOCKS_PER_SEC; // Calculate elapsed time
+
+    if (result == -1) {
+        printf("palabra no valida\n");
+    } else {
+        printf("Palabra válida encontrada en el índice: %d\n", result);
+    }
+    
+    printf("Tiempo de búsqueda binaria: %f segundos\n", time_taken);
 
     WordleGame game;
     initialize_game(&game, argv[1]);
