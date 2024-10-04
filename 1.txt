@@ -1,0 +1,3 @@
+casas,5
+letra,3
+perro,5
