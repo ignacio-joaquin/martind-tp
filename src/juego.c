@@ -40,9 +40,6 @@ int initialize_game(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const 
 }
 
 int guess_word(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const char *player_word) {
-    if (binary_search(words, MAX_WORDS, player_word) == -1) {
-        return 0;  // Palabra inválida
-    }
 
     // Arrays temporales para controlar el estado de las letras de la palabra secreta y la palabra del jugador
     int secret_letter_count[26] = {0};  // Para contar la cantidad de cada letra en la palabra secreta
@@ -80,5 +77,4 @@ int guess_word(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const char 
 
     return 1;  // Adivinanza válida
 }
-
 

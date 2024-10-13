@@ -1,0 +1,1 @@
+Por favor, proporciona una palabra secreta de 5 letras como argumento que este presente en la base de datos.

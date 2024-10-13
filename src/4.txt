@@ -1,0 +1,10 @@
+ababa,3
+casis,0
+ferre,0
+ferro,4
+festa,1
+pared,4
+parel,0
+pareo,3
+traca,6
+traer,6
