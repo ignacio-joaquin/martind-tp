@@ -35,5 +35,6 @@ PalabraConFrecuencia eliminarRaiz(Heap *heap);
 void setPosition(LetraPosicionada *letraPos, int pos);
 bool isPositionSet(LetraPosicionada *letraPos, int pos);
 
+void cargarPalabrasDesdeArchivo(Heap **heap, const char *nombre_archivo);
 
 #endif // STRUCT_BOT_H

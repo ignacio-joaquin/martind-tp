@@ -107,3 +107,40 @@ void setPosition(LetraPosicionada *letraPos, int pos) {
 bool isPositionSet(LetraPosicionada *letraPos, int pos) {
     return (letraPos->posicion & (1 << pos)) != 0;  // Verifica si el bit en 'pos' está activo
 }
+
+void cargarPalabrasDesdeArchivo(Heap **heap, const char *nombre_archivo) {
+    FILE *file = fopen(nombre_archivo, "r");
+    if (!file) {
+        fprintf(stderr, "Error al abrir el archivo %s\n", nombre_archivo);
+        return;
+    }
+
+    char linea[256];  // Buffer para leer líneas del archivo
+    char palabra[WORD_LENGTH];
+    int frecuencia;
+
+    while (fgets(linea, sizeof(linea), file)) {
+        // Cambiamos el separador a ',' y analizamos la línea leída
+        if (sscanf(linea, "%49[^,],%d", palabra, &frecuencia) != 2) {
+            fprintf(stderr, "Formato de línea inválido: %s", linea);
+            continue;  // Ignorar líneas mal formateadas
+        }
+
+        // Verificar que la frecuencia sea positiva
+        if (frecuencia < 0) {
+            fprintf(stderr, "Frecuencia negativa encontrada para la palabra: %s\n", palabra);
+            continue;  // Saltar esta entrada
+        }
+
+        // Asegúrate de que no hay desbordamiento de buffer
+        if (strlen(palabra) >= WORD_LENGTH) {
+            fprintf(stderr, "Palabra demasiado larga: %s\n", palabra);
+            continue;  // Ignorar palabras demasiado largas
+        }
+
+        // Insertar la palabra en la cola de prioridad
+        insertar(*heap, palabra, frecuencia);
+    }
+
+    fclose(file);
+}
