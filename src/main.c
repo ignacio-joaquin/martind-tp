@@ -1,6 +1,7 @@
-#include "game.h"
+#include "juego.h"
 #include "struct_bot.h"
-#include "struc_game.h"
+#include "struc_juego.h"
+#include "bot.h"
 
 void print_feedback(WordleGame *game, const char *player_word) {
     // Solo imprime retroalimentación si el intento fue válido
@@ -34,13 +35,13 @@ int main(int argc, char *argv[]) {
 
     Heap *heap = crearHeap(MAX_WORDS);
     char palabra_bot[WORD_LENGTH] = {'a', 'i', 'r', 'e', 'o', '\0'};  // Para almacenar la palabra adivinada
-    letraPosicionada letras_correctas[WORD_LENGTH - 1] = {0};
+    LetraPosicionada letras_correctas[WORD_LENGTH - 1] = {0};
     LetraPosicionada letras_incorrectas[MAX_ALFA - WORD_LENGTH] = {0};  // Letras correctas en las posiciones correctas
     char letras_presentes[WORD_LENGTH - 1] = {0};
     int letrasPresentes = 0;
     int letrasCorrectas = 0;
     int letrasIncorrectas = 0;
-    int desfasajePresentes = 0;
+    int desfasajeIncorrectas = 0;
     int desfasajeCorrectas = 0;
     int desfasajeIncorrectas = 0;
     /*if(!useBot){
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]) {
         free(letrasPresentes);
         free(letrasCorrectas);
         free(letrasIncorrectas);
-        free(desfasajePresentes);
+        free(desfasajeIncorrectas);
         free(desfasajeCorrectas);
         free(desfasajeIncorrectas);
     }else{*/
@@ -68,30 +69,38 @@ int main(int argc, char *argv[]) {
     char player_word[WORD_LENGTH];
 
     for (int intento = 0; intento < MAX_ATTEMPTS; intento++) {
-        printf("\nIngresa tu palabra de 5 letras: ");
-        if (heap->size > 0 && intento != 0) {
+
+        if (heap->size > 0 && intento != 0 && useBot) {
             // Obtener la palabra más frecuente (raíz del data)
             PalabraConFrecuencia palabraActual = eliminarRaiz(heap);
-            strncpy(palabra_adivinada, palabraActual.palabra, WORD_LENGTH);  // Copiar la palabra adivinada
-
-            printf("Intento %d: Adivinando la palabra: %s con frecuencia %d\n", intento + 1, palabraActual.palabra, palabraActual.frecuencia);
-        }else if(heap->size > 0 && intento == 0){
+            strcpy(palabra_bot, palabraActual.palabra);
             printf("\nEl bot recomienda la palabra: %s", palabra_bot);
-        } else {
+            
+
+        }else if(heap->size > 0 && intento == 0 && useBot){
+            printf("\nEl bot recomienda la palabra: %s", palabra_bot);
+        } else if (useBot)
+        {
             printf("No hay más palabras para recomendar\n");
+        }else
+        {
+            
         }
+        printf("\nIngresa tu palabra de 5 letras: ");
         
         scanf("%5s", player_word);  // Limita la entrada a 5 letras
 
         // Check if the guessed word is valid
         guess_word(&game, player_word);
 
-        print_feedback(game, player_word);
+        print_feedback(&game, player_word);
 
         if (game.won) {
             printf("¡Felicidades, has ganado!\n");
+            return 0;
         } else if (game.attempts_left == 0) {
             printf("Has perdido. La palabra secreta era: %s\n", game.letters);
+            return 0;
         } else {
             printf("Intentos restantes: %d\n", game.attempts_left);
         }
@@ -106,7 +115,7 @@ int main(int argc, char *argv[]) {
 
                 // Verificar si la letra ya está en letras_correctas
                 for (int k = 0; k < letrasCorrectas; k++) {
-                    if (letras_correctas[k].letra == palabra_adivinada[i]) {
+                    if (letras_correctas[k].letra == player_word[i]) {
                         yaCorrecta = true;
 
                         // Marcar también la posición actual si ya está en otra posición
@@ -119,7 +128,7 @@ int main(int argc, char *argv[]) {
 
                 // Si la letra no está en letras_correctas, se agrega
                 if (!yaCorrecta) {
-                    letras_correctas[letrasCorrectas].letra = palabra_adivinada[i];
+                    letras_correctas[letrasCorrectas].letra = player_word[i];
                     setPosition(&letras_correctas[letrasCorrectas], i);  // Marcar posición como correcta
                     letrasCorrectas++;
                 }
@@ -130,7 +139,7 @@ int main(int argc, char *argv[]) {
 
                 // Verificar si la letra ya está en letras_incorrectas
                 for (int k = 0; k < letrasIncorrectas; k++) {
-                    if (letras_incorrectas[k].letra == palabra_adivinada[i]) {
+                    if (letras_incorrectas[k].letra == player_word[i]) {
                         yaIncorrecta = true;
                         break;
                     }
@@ -139,7 +148,7 @@ int main(int argc, char *argv[]) {
                 // Verificar si la letra está en letras_presentes
                 bool enPresentes = false;
                 for (int j = 0; j < letrasPresentes; j++) {
-                    if (letras_presentes[j] == palabra_adivinada[i]) {
+                    if (letras_presentes[j] == player_word[i]) {
                         enPresentes = true;
                         break;
                     }
@@ -151,7 +160,7 @@ int main(int argc, char *argv[]) {
 
                     // Verificar si la letra es correcta en alguna otra posición
                     for (int k = 0; k < letrasCorrectas; k++) {
-                        if (letras_correctas[k].letra == palabra_adivinada[i]) {
+                        if (letras_correctas[k].letra == player_word[i]) {
                             letraEsCorrectaEnOtraPosicion = true;  // La letra es correcta en esta posición
 
                             // Si es correcta en esta posición, entonces no marcar incorrecta
@@ -169,7 +178,7 @@ int main(int argc, char *argv[]) {
 
                     // Si la letra no es correcta en otras posiciones, agregar a letras_incorrectas
                     if (!letraEsCorrectaEnOtraPosicion) {
-                        letras_incorrectas[letrasIncorrectas].letra = palabra_adivinada[i];
+                        letras_incorrectas[letrasIncorrectas].letra = player_word[i];
                         // Aquí puedes marcar todas las posiciones como incorrectas según tu lógica
                         for (int pos = 0; pos < WORD_LENGTH - 1; pos++) {
                             if (pos != i) {
@@ -187,7 +196,7 @@ int main(int argc, char *argv[]) {
 
                 // Verificar si la letra ya está en letras_presentes
                 for (int k = 0; k < letrasPresentes; k++) {
-                    if (letras_presentes[k] == palabra_adivinada[i]) {
+                    if (letras_presentes[k] == player_word[i]) {
                         yaPresente = true;
                         break;
                     }
@@ -195,14 +204,14 @@ int main(int argc, char *argv[]) {
 
                 // Si la letra no está en letras_presentes, se agrega
                 if (!yaPresente) {
-                    letras_presentes[letrasPresentes] = palabra_adivinada[i];
+                    letras_presentes[letrasPresentes] = player_word[i];
                     letrasPresentes++;
                 }
 
                 // Verificar si la letra no está en letras_incorrectas, marcarla como incorrecta en la posición actual
                 bool letraIncorrecta = false;
                 for (int j = 0; j < letrasIncorrectas; j++) {
-                    if (letras_incorrectas[j].letra == palabra_adivinada[i]) {
+                    if (letras_incorrectas[j].letra == player_word[i]) {
                         letraIncorrecta = true;
                         setPosition(&letras_incorrectas[j], i);  // Marcar la posición como inválida
                         break;
@@ -211,18 +220,19 @@ int main(int argc, char *argv[]) {
 
                 // Si la letra no está en letras_incorrectas, la agregamos y marcamos la posición actual como incorrecta
                 if (!letraIncorrecta) {
-                    letras_incorrectas[letrasIncorrectas].letra = palabra_adivinada[i];
+                    letras_incorrectas[letrasIncorrectas].letra = player_word[i];
                     setPosition(&letras_incorrectas[letrasIncorrectas], i);  // Marcar la posición actual como incorrecta
                     letrasIncorrectas++;
                 }
             }
         }
-        filtrarPalabras(heap, letras_presentes, letras_incorrectas, letras_correctas, letrasPresentes, letrasCorrectas, letrasIncorrectas, desfasajePresentes, desfasajeCorrectas, desfasajeIncorrectas);
+        filtrarPalabras(heap, letras_presentes, letras_incorrectas, letras_correctas, letrasPresentes, letrasCorrectas, letrasIncorrectas, desfasajeIncorrectas);
         // Filtrar palabras según la retroalimentación
         desfasajeCorrectas = letrasCorrectas;
         desfasajeIncorrectas = letrasIncorrectas;
-        desfasajePresentes = letrasPresentes;
+        desfasajeIncorrectas = letrasPresentes;
     }
-    return 0;
+
     liberarHeap(heap);
+    return 0;
 }

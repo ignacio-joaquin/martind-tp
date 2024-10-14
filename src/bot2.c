@@ -1,3 +1,8 @@
+#include "bot.h"
+#include "juego.h"
+#include "struct_bot.h"
+#include "struc_juego.h"
+
 int main(int argc, char *argv[]) {
   //  FILE *file = freopen("salida.txt", "w", stdout);
     // Verificar si se pasó una palabra inicial
@@ -32,7 +37,7 @@ int main(int argc, char *argv[]) {
     int letrasIncorrectas = 0;
     int desfasajePresentes = 0;
     int desfasajeCorrectas = 0;
-    int desfasajeIncorrectas = 0;
+    int desfasajePresentes = 0;
 
     for (int intento = 0; intento < MAX_ATTEMPTS; intento++) {
         if (intento == 0) {
@@ -191,11 +196,9 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-        filtrarPalabras(heap, letras_presentes, letras_incorrectas, letras_correctas, letrasPresentes, letrasCorrectas, letrasIncorrectas, desfasajePresentes, desfasajeCorrectas, desfasajeIncorrectas);
+        filtrarPalabras(heap, letras_presentes, letras_incorrectas, letras_correctas, letrasPresentes, letrasCorrectas, letrasIncorrectas, desfasajePresentes);
         // Filtrar palabras según la retroalimentación
-        desfasajeCorrectas = letrasCorrectas;
-        desfasajeIncorrectas = letrasIncorrectas;
-        desfasajePresentes = letrasPresentes;
+        desfasajePresentes = letrasIncorrectas;
     }
 
     // Liberar memoria

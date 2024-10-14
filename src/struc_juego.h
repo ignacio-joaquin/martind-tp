@@ -5,7 +5,7 @@
 
 #define MAX_WORDS 4976    // Total de palabras en 3.txt
 #define WORD_LENGTH 6      // Longitud de cada palabra + 1 por el terminador
-#define MAX_ATTEMPTS 6     // Número máximo de intentos
+#define MAX_ATTEMPTS 6    // Número máximo de intentos
 #define MAX_ALFA 26
 
 // Estados de retroalimentación
