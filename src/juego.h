@@ -4,7 +4,7 @@
 #include "struc_juego.h"
 
 // Prototipos de funciones
-int initialize_game(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const char *player_word);
-int guess_word(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const char *player_word);
+int initialize_game(WordleGame *game,  const char *player_word);
+int guess_word(WordleGame *game,  const char *player_word);
 
 #endif // JUEGO_H

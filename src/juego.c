@@ -6,29 +6,9 @@
 
 #include "struc_juego.h"
 
-int binary_search(char arr[MAX_WORDS][WORD_LENGTH], int size, const char *target) {
-    int left = 0;
-    int right = size - 1;
 
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        int cmp = strcmp(arr[mid], target);
-
-        if (cmp == 0) {
-            return mid;  // Target found
-        }
-        if (cmp < 0) {
-            left = mid + 1;  // Search in the right half
-        } else {
-            right = mid - 1;  // Search in the left half
-        }
-    }
-
-    return -1;  // Target not found
-}
-
-int initialize_game(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const char *palabraSecreta) {
-    if (strlen(palabraSecreta) != WORD_LENGTH - 1 || binary_search(words, MAX_WORDS, palabraSecreta) == -1) {
+int initialize_game(WordleGame *game, const char *palabraSecreta) {
+    if (strlen(palabraSecreta) != WORD_LENGTH - 1) {
         printf("Por favor, proporciona una palabra secreta de 5 letras como argumento que este presente en la base de datos.\n");
         return 1;
     }
@@ -39,7 +19,7 @@ int initialize_game(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const 
     return 0;
 }
 
-int guess_word(WordleGame *game, char words[MAX_WORDS][WORD_LENGTH], const char *player_word) {
+int guess_word(WordleGame *game, const char *player_word) {
 
     // Arrays temporales para controlar el estado de las letras de la palabra secreta y la palabra del jugador
     int secret_letter_count[26] = {0};  // Para contar la cantidad de cada letra en la palabra secreta

@@ -23,6 +23,4 @@ typedef struct {
     int won;                       // Indicador de victoria
 } WordleGame;
 
-int readWords(const char *filename, char words[MAX_WORDS][WORD_LENGTH]);
-
 #endif // STRUC_GAME_H
