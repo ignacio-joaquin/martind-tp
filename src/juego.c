@@ -21,7 +21,7 @@ int initialize_game(WordleGame *game, const char *palabraSecreta) {
 int guess_word(WordleGame *game, const char *player_word) {
 
     // Arrays temporales para controlar el estado de las letras de la palabra secreta y la palabra del jugador
-    int contadorLetrasSecretas[WORD_LENGTH] = {0};  // Para contar la cantidad de cada letra en la palabra secreta
+    int contadorLetrasSecretas[MAX_ALFA] = {0};  // Para contar la cantidad de cada letra en la palabra secreta
     int letrasMarcadasCorrecto[WORD_LENGTH] = {0};  // Para marcar las letras del jugador que ya fueron evaluadas como CORRECTO
 
     //Identificar letras correctas (CORRECTO) y contar las letras restantes de la palabra secreta
