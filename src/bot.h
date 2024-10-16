@@ -10,7 +10,12 @@
 #include "struc_juego.h"
 #include "struct_bot.h"
 
-void filtrarPalabras(Heap *heap, char letras_presentes[], LetraPosicionada letras_incorrectas[], LetraPosicionada letras_correctas[], int letrasPresentes, int letrasCorrectas, int letrasIncorrectas, int desfasajePresentes);
+#define PALABRA_INICIAL "aireo\0"
 
+void filtrarPalabras(Heap *heap, char letras_presentes[], LetraPosicionada letras_incorrectas[], LetraPosicionada letras_correctas[],
+                     int letrasPresentes, int letrasCorrectas, int letrasIncorrectas, int desfasajePresentes);
 
-#endif // STRUCT_BOT_H
+void procesarFeeback(WordleGame game, char *player_word, LetraPosicionada *letras_correctas, int *cantLetrasCorrectas,
+                     LetraPosicionada *letras_incorrectas, int *cantLetrasIncorrectas, char *letras_presentes, int *cantLetrasPresentes);
+
+#endif  // STRUCT_BOT_H

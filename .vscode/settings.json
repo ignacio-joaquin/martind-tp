@@ -3,6 +3,9 @@
         "stdio.h": "c",
         "stdlib.h": "c",
         "struc_juego.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "stdbool.h": "c",
+        "juego.h": "c",
+        "struct_bot.h": "c"
     }
 }

@@ -13,7 +13,7 @@ typedef struct PalabraConFrecuencia {
     int frecuencia;              // Frecuencia de uso
 } PalabraConFrecuencia;
 
-// Estructura de la cola de prioridad (Heap)
+// Estructura del Heap
 typedef struct Heap {
     PalabraConFrecuencia *data;  // Arreglo del data
     int size;                    // Tamaño actual del data
@@ -26,7 +26,7 @@ typedef struct {
     unsigned char posicion;  // Posiciones en formato comprimido
 } LetraPosicionada;
 
-// Prototipos de funciones
+
 Heap *crearHeap(int capacidad);
 void liberarHeap(Heap *heap);
 void insertar(Heap *heap, const char *palabra, int frecuencia);

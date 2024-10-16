@@ -40,7 +40,7 @@ void upheap(Heap *heap, int index) {
     }
 }
 
-// Función para insertar en el data
+// Función para insertar en el heap
 void insertar(Heap *heap, const char *palabra, int frecuencia) {
     if (heap->size >= heap->capacity) {
         fprintf(stderr, "Cola de prioridad llena\n");
@@ -55,11 +55,11 @@ void insertar(Heap *heap, const char *palabra, int frecuencia) {
     heap->data[heap->size] = nuevoNodo;
     heap->size++;
 
-    // Mantener la propiedad del data
+    // Mantener la propiedad del heap
     upheap(heap, heap->size - 1);
 }
 
-// Función para mantener la propiedad del data (down-data)
+// Función para mantener la propiedad del heap (down-heap)
 void downheap(Heap *heap, int index) {
     int leftChild, rightChild, largest;
     while (index < heap->size) {
@@ -94,7 +94,7 @@ PalabraConFrecuencia eliminarRaiz(Heap *heap) {
     heap->data[0] = heap->data[heap->size - 1];  // Mover el último elemento a la raíz
     heap->size--;
 
-    // Mantener la propiedad del data
+    // Mantener la propiedad del heap
     downheap(heap, 0);
 
     return raiz;
